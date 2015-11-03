@@ -15,50 +15,50 @@ from tweepy import Stream
 
 class AvgDegreeGenerator:
 
-	def __init__(self, raw_tweet_file_name, ft1_file_name, ft2_file_name):
-		self.raw_tweet_file_name = raw_tweet_file_name
-		self.ft1_file_name = ft1_file_name
-		self.ft2_file_name = ft2_file_name
-		self.tweet_parser = TweetParser()
-		self.edge_cache = GraphLRUEdgeCache()
-		self.adj_graph_cache = GraphAdjacentSetCache()
-		self.start_time = None
-		self.is_start = False
+  def __init__(self, raw_tweet_file_name, ft1_file_name, ft2_file_name):
+    self.raw_tweet_file_name = raw_tweet_file_name
+    self.ft1_file_name = ft1_file_name
+    self.ft2_file_name = ft2_file_name
+    self.tweet_parser = TweetParser()
+    self.edge_cache = GraphLRUEdgeCache()
+    self.adj_graph_cache = GraphAdjacentSetCache()
+    self.start_time = None
+    self.is_start = False
 
-		# clear the context
-		ft1 = open(self.ft1_file_name, 'w')
-		ft2 = open(self.ft2_file_name, 'w')
-		ft1.close()
-		ft2.close()
+    # clear the context
+    ft1 = open(self.ft1_file_name, 'w')
+    ft2 = open(self.ft2_file_name, 'w')
+    ft1.close()
+    ft2.close()
 
-	def parse_tweet_and_generate_degree(self, line):
-		parsed_tweet, cur_time = self.parse_one_tweet_and_generate_degree(line)
-		if None != parsed_tweet: 
-			ft1 = open(self.ft1_file_name, 'ab')
-			ft1.write(parsed_tweet + '\n')
-			ft1.close()
-			if False == self.is_start:
-				self.start_time = cur_time
-				self.is_start = True
-			elif (cur_time - timedelta(seconds = 60) > self.start_time):
-				ft2 = open(self.ft2_file_name, 'ab')
-				if 0 == len(self.adj_graph_cache.cache):
-					ft2.write(str(0) + '\n')
-				else:
-					ft2.write(str(round(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), 2)) + '\n')
-				ft2.close()
+  def parse_tweet_and_generate_degree(self, line):
+    parsed_tweet, cur_time = self.parse_one_tweet_and_generate_degree(line)
+    if None != parsed_tweet: 
+      ft1 = open(self.ft1_file_name, 'ab')
+      ft1.write(parsed_tweet + '\n')
+      ft1.close()
+      if False == self.is_start:
+        self.start_time = cur_time
+        self.is_start = True
+      elif (cur_time - timedelta(seconds = 60) > self.start_time):
+        ft2 = open(self.ft2_file_name, 'ab')
+        if 0 == len(self.adj_graph_cache.cache):
+          ft2.write(str(0) + '\n')
+        else:
+          ft2.write(str(round(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), 2)) + '\n')
+        ft2.close()
 
-	def parse_one_tweet_and_generate_degree(self, line):
-		tweet_json = json.loads(line)
-		text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
-		if None != text:
-			hashtag_pair_list = self.tweet_parser.get_hashtag_pair_list(text)
-			time_format = self.tweet_parser.get_datetime(time)
-			remove_list = self.edge_cache.set_hashtag_pair_list(hashtag_pair_list, time_format)
-			self.adj_graph_cache.set_hashtag_pair_list(hashtag_pair_list)
-			self.adj_graph_cache.remove_hashtag_pair(remove_list)
-			return (text + ' (timestamp: ' + time + ')'), time_format
-		return None, None
+  def parse_one_tweet_and_generate_degree(self, line):
+    tweet_json = json.loads(line)
+    text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
+    if None != text:
+      hashtag_pair_list = self.tweet_parser.get_hashtag_pair_list(text)
+      time_format = self.tweet_parser.get_datetime(time)
+      remove_list = self.edge_cache.set_hashtag_pair_list(hashtag_pair_list, time_format)
+      self.adj_graph_cache.set_hashtag_pair_list(hashtag_pair_list)
+      self.adj_graph_cache.remove_hashtag_pair(remove_list)
+      return (text + ' (timestamp: ' + time + ')'), time_format
+    return None, None
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets that are the received from the stream.
