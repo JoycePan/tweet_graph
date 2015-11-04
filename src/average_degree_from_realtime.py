@@ -14,6 +14,13 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 
 class AvgDegreeGenerator:
+  """ Generate average degree, with realtime tweets.
+  As tweets are realtime, I would open ft1 and ft2, write data and close them, 
+  whenever I receive one tweet. It will write data to disk in a non-sequential manner. 
+  As the experienment data in average_degree_from_local_tweet.py is about 9 seconds parsing 18729 tweets,
+  the speed is fast enough. Then I could open and close ft1 and ft2 file frequently 
+  to let users observe the realtime data.
+  """
 
   def __init__(self, raw_tweet_file_name, ft1_file_name, ft2_file_name):
     self.raw_tweet_file_name = raw_tweet_file_name
@@ -31,8 +38,10 @@ class AvgDegreeGenerator:
     ft1.close()
     ft2.close()
 
+  # Input raw_tweet, parse it and write it to ft1.
+  # When timestamp of current tweet is 60 seconds older than beginning tweet, write average degree to ft2
   def parse_tweet_and_generate_degree(self, line):
-    parsed_tweet, cur_time = self.parse_one_tweet_and_generate_degree(line)
+    parsed_tweet, cur_time = self.parse_one_tweet(line)
     if None != parsed_tweet: 
       ft1 = open(self.ft1_file_name, 'ab')
       ft1.write(parsed_tweet + '\n')
@@ -45,10 +54,13 @@ class AvgDegreeGenerator:
         if 0 == len(self.adj_graph_cache.cache):
           ft2.write(str(0) + '\n')
         else:
-          ft2.write(str(round(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), 2)) + '\n')
+          ft2.write(format(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), '.2f') + '\n')
         ft2.close()
 
-  def parse_one_tweet_and_generate_degree(self, line):
+  # Input raw_tweet, parse it. 
+  # Store edges to self.edge_cache, store nodes and edges to self.adj_graph_cache
+  # return parsed tweet and datetime, if there's no text in the tweet, return None, None
+  def parse_one_tweet(self, line):
     tweet_json = json.loads(line)
     text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
     if None != text:
@@ -62,7 +74,7 @@ class AvgDegreeGenerator:
 
 class StdOutListener(StreamListener):
     """ A listener handles tweets that are the received from the stream.
-    This is a basic listener that just prints received tweets to stdout.
+    And write parsed tweets to ft1, write average degree to ft2.
     """
     def __init__(self, filename, generator):
         self.filename = filename

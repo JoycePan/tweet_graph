@@ -1,10 +1,16 @@
 from graph_LRU_edge_cache import *
 
 class GraphAdjacentSetCache:
+  """ Store the whole graph information with HashMap, which key is node (hashtag) in the graph, 
+  value is a set of neighbor (hashtags appear in the same tweet with the key).
+
+  This data structure aims to get the total nodes in the graph.
+  """
 
   def __init__(self):
     self.cache = {}   # node map to a set of neighbor nodes
 
+  # Input a list of hashtag pair, store them in the data structure
   def set_hashtag_pair_list(self, hashtag_pair_list):
     for hashtag_pair in hashtag_pair_list:
       # first element of the pair
@@ -18,6 +24,8 @@ class GraphAdjacentSetCache:
       else:
         self.cache[hashtag_pair[1]].add(hashtag_pair[0])
 
+  # Input a list of hashtag pair, remove related edges in the graph
+  # If the set become empty, remove related node from the graph
   def remove_hashtag_pair(self, remove_list):
     for pair in remove_list:
       self.cache[pair[0]].remove(pair[1])

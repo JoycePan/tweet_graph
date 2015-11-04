@@ -9,6 +9,12 @@ from graph_LRU_edge_cache import *
 from graph_adjacent_set_cache import *
 
 class AvgDegreeGenerator:
+  """ Generate average degree, with information from the pre_created tweet file.
+  As tweets are pre created, I write parsed tweets into ft1 when I've parsed 3000 tweets. 
+  In this case, I can write data sequentially. 
+
+  The experienment data is about 9 seconds to parse 18729 tweets.
+  """
 
   def __init__(self, raw_tweet_file_name, ft1_file_name, ft2_file_name):
     self.raw_tweet_file_name = raw_tweet_file_name
@@ -18,6 +24,9 @@ class AvgDegreeGenerator:
     self.edge_cache = GraphLRUEdgeCache()
     self.adj_graph_cache = GraphAdjacentSetCache()
 
+  # Parse tweet from pre_created tweet file. 
+  # Write parsed tweets to ft1 after processing 3000 tweets.
+  # When timestamp of current tweet is 60 seconds older than beginning tweet, write average degree to ft2
   def parse_tweet_and_generate_degree(self):
     ft1 = open(self.ft1_file_name, 'w')
     ft2 = open(self.ft2_file_name, 'w')
@@ -29,7 +38,7 @@ class AvgDegreeGenerator:
     with open(self.raw_tweet_file_name) as raw_tweet_file:
       for line in raw_tweet_file:
         count += 1
-        parsed_tweet, cur_time = self.parse_one_tweet_and_generate_degree(line)
+        parsed_tweet, cur_time = self.parse_one_tweet(line)
         if None != parsed_tweet: 
           parsed_tweet_list.append(parsed_tweet)
           if False == is_start:
@@ -39,7 +48,7 @@ class AvgDegreeGenerator:
             if 0 == len(self.adj_graph_cache.cache):
               ft2.write(str(0) + '\n')
             else:
-              ft2.write(str(round(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), 2)) + '\n')
+              ft2.write(format(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), '.2f') + '\n')
 
           # write to ft1 when parse 3000 tweets
           if len(parsed_tweet_list) > 3000:
@@ -51,7 +60,10 @@ class AvgDegreeGenerator:
     ft2.close()
     return count
 
-  def parse_one_tweet_and_generate_degree(self, line):
+  # Input raw_tweet, parse it. 
+  # Store edges to self.edge_cache, store nodes and edges to self.adj_graph_cache
+  # return parsed tweet and datetime, if there's no text in the tweet, return None, None
+  def parse_one_tweet(self, line):
     tweet_json = json.loads(line)
     text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
     if None != text:

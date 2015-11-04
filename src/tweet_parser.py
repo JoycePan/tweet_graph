@@ -3,18 +3,25 @@ import re
 from dateutil import parser
 
 class TweetParser:
+  """ A tweet parser that can parse raw tweets, get datetime from string of datetime,
+  get a list of hashtag pair from a tweet context
+  """
 
+  # Return tweet context and datetime string from raw tweet, 
+  # Return None if the input tweet has abnormal format
   def parse_raw_tweet(self, raw_tweet):
     try:  
       text = re.sub(r'[^\x00-\x7F]+', '', raw_tweet['text'])
       date_string = raw_tweet['created_at']
       return text, date_string
     except Exception as e:
-      return None, None   # skill abnormal tweet, like {"limit":{"track":12,"timestamp_ms":"1446253519737"}}
+      return None, None   # skip abnormal tweet, like {"limit":{"track":12,"timestamp_ms":"1446253519737"}}
 
+  # Return datetime from datetime string
   def get_datetime(self, date_string):
     return parser.parse(date_string)
 
+  # Return a sorted hashtag_pair_list from tweet context
   def get_hashtag_pair_list(self, text):
     # create sorted hashtag_list
     string_list = text.split(' ')
@@ -22,7 +29,7 @@ class TweetParser:
     for s in string_list:
       if '#' in s: 
         hashtag_sub_list = s.split(',')   # some of the hashtag is connected with ','
-                          # e.g. "22h,#reto800risah,#amandapasucasa,#sofiaganadora,#teamsofia"
+                                          # e.g. "22h,#reto800risah,#amandapasucasa,#sofiaganadora,#teamsofia"
         for h in hashtag_sub_list:
           if (len(h) >= 1 and '#' == h[0]): hashtag_list.append(h.lower())
     hashtag_list = list(set(hashtag_list))  # remove duplicate
