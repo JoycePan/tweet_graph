@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# you should have twitter credential as following format and input the directory as the second argument
+# the default tweet credential file path is ./data-gen/.twitter
+
+# {
+# "access_token":"your access_token",
+# "access_token_secret":"your access_token_secret",
+# "consumer_key":"your consumer_key",
+# "consumer_secret":"your consumer_secret"
+# }
+
 # argv[0]: script that process realtime tweets
 # argv[1]: directory of twitter credential
 # argv[2]: directory of tweet_input

@@ -2,12 +2,12 @@ from datetime import *
 
 class GraphLRUEdgeCache:
   """ Store graph edges with LRU (least recently used) algorithm.
-  Implement LRU algorithm with HashMap and Double LinkedList, 
-  key of the HashMap is hashtag_pair, value is related Double LinkedList Node, 
+  Implement LRU algorithm with HashMap and Double LinkedList. 
+  Key of the HashMap is hashtag_pair, value is related Double LinkedList Node, 
   which contains hashtag_pair, datetime and two pointers. 
   The Double LinkedList is sorted in ascending order with datetime.
 
-  This data structure aims to keep tweets in latest 60 seconds.
+  This data structure aims to keep tweets in latest 60 seconds and get edge number.
   """
 
   class Node:

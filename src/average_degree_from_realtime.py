@@ -29,10 +29,11 @@ class AvgDegreeGenerator:
     self.tweet_parser = TweetParser()
     self.edge_cache = GraphLRUEdgeCache()
     self.adj_graph_cache = GraphAdjacentSetCache()
+    self.unicode_tweet_num = 0
     self.start_time = None
     self.is_start = False
 
-    # clear the context
+    # open and clear the context
     ft1 = open(self.ft1_file_name, 'w')
     ft2 = open(self.ft2_file_name, 'w')
     ft1.close()
@@ -62,8 +63,9 @@ class AvgDegreeGenerator:
   # return parsed tweet and datetime, if there's no text in the tweet, return None, None
   def parse_one_tweet(self, line):
     tweet_json = json.loads(line)
-    text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
+    text, time, has_unicode = self.tweet_parser.parse_raw_tweet(tweet_json)
     if None != text:
+      if has_unicode: self.unicode_tweet_num += 1
       hashtag_pair_list = self.tweet_parser.get_hashtag_pair_list(text)
       time_format = self.tweet_parser.get_datetime(time)
       remove_list = self.edge_cache.set_hashtag_pair_list(hashtag_pair_list, time_format)
@@ -72,42 +74,52 @@ class AvgDegreeGenerator:
       return (text + ' (timestamp: ' + time + ')'), time_format
     return None, None
 
-class StdOutListener(StreamListener):
-    """ A listener handles tweets that are the received from the stream.
-    And write parsed tweets to ft1, write average degree to ft2.
-    """
-    def __init__(self, filename, generator):
-        self.filename = filename
-        self.generator = generator
-        f = open(self.filename, 'w')
-        f.close()
+  # When keyboard Interrupt, write down numbers of tweets contained unicode
+  def handle_keyboard_interrupt(self):
+    ft1 = open(self.ft1_file_name, 'ab')
+    ft1.write('\n' + str(self.unicode_tweet_num) + ' tweets contained unicode.')
+    ft1.close()
 
-    # this is the event handler for new data
-    def on_data(self, data):
-        if not os.path.isfile(self.filename):    # check if file doesn't exist
-            f = file(self.filename, 'w')
-            f.close()
-        with open(self.filename, 'ab') as f:
-            # print "writing to {}".format(self.filename)
-            f.write(data)
-            self.generator.parse_tweet_and_generate_degree(data)
-        f.closed
-        
-    # this is the event handler for errors    
-    def on_error(self, status):
-        print(status)
+class StdOutListener(StreamListener):
+  """ A listener handles tweets that are the received from the stream.
+  And write parsed tweets to ft1, write average degree to ft2.
+  """
+  def __init__(self, filename, generator):
+    self.filename = filename
+    self.generator = generator
+    f = open(self.filename, 'w')
+    f.close()
+
+  # this is the event handler for new data
+  def on_data(self, data):
+    if not os.path.isfile(self.filename):    # check if file doesn't exist
+      f = file(self.filename, 'w')
+      f.close()
+    with open(self.filename, 'ab') as f:
+      # print "writing to {}".format(self.filename)
+      f.write(data)
+      self.generator.parse_tweet_and_generate_degree(data)
+    f.closed
+      
+  # this is the event handler for errors    
+  def on_error(self, status):
+    print(status)
 
 if __name__ == '__main__':
-    # authentication from the credentials file above
-    twitter_file = open(sys.argv[1])  
-    twitter_cred = json.load(twitter_file)
-    twitter_file.close()
-    auth = OAuthHandler(twitter_cred["consumer_key"], twitter_cred["consumer_secret"])
-    auth.set_access_token(twitter_cred["access_token"], twitter_cred["access_token_secret"])
+  # authentication from the credentials file above
+  twitter_file = open(sys.argv[1])  
+  twitter_cred = json.load(twitter_file)
+  twitter_file.close()
+  auth = OAuthHandler(twitter_cred["consumer_key"], twitter_cred["consumer_secret"])
+  auth.set_access_token(twitter_cred["access_token"], twitter_cred["access_token_secret"])
 
-    generator = AvgDegreeGenerator(sys.argv[2], sys.argv[3], sys.argv[4])
-    listener = StdOutListener(sys.argv[2], generator)
+  generator = AvgDegreeGenerator(sys.argv[2], sys.argv[3], sys.argv[4])
+  listener = StdOutListener(sys.argv[2], generator)
 
-    print "Use CTRL + C to exit at any time.\n"
-    stream = Stream(auth, listener)
+  print "Use CTRL + C to exit at any time.\n"
+  stream = Stream(auth, listener)
+  try:
     stream.filter(locations=[-180,-90,180,90]) # this is the entire world, any tweet with geo-location enabled
+  except KeyboardInterrupt:
+    listener.generator.handle_keyboard_interrupt()
+    raise

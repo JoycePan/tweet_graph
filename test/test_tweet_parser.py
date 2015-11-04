@@ -13,19 +13,29 @@ class TestTweetParser(unittest.TestCase):
     self.tweet_parser = TweetParser()
     self.file_dir = os.path.dirname(os.path.realpath(__file__))
 
-  def test_parse_raw_tweet(self):
-    with open(self.file_dir + '/raw_tweet.txt') as f:
+  def test_parse_raw_tweet_without_unicode(self):
+    with open(self.file_dir + '/raw_tweet_without_unicode.txt') as f:
       raw_tweet = json.load(f)
-      text, date_string = self.tweet_parser.parse_raw_tweet(raw_tweet)
+      text, date_string, has_unicode = self.tweet_parser.parse_raw_tweet(raw_tweet)
+      self.assertEqual(text, "these days all I do is wonder if you're bending over backwards for some else")
+      self.assertEqual(date_string, "Wed Nov 04 04:46:21 +0000 2015")
+      self.assertEqual(has_unicode, False)
+
+  def test_parse_raw_tweet_with_unicode(self):
+    with open(self.file_dir + '/raw_tweet_with_unicode.txt') as f:
+      raw_tweet = json.load(f)
+      text, date_string, has_unicode = self.tweet_parser.parse_raw_tweet(raw_tweet)
       self.assertEqual(text, "I'm at Terminal de Integrao do Varadouro in Joo Pessoa, PB https://t.co/HOl34REL1a")
       self.assertEqual(date_string, "Sun Nov 01 23:34:40 +0000 2015")
+      self.assertEqual(has_unicode, True)
 
-  def test_parse_raw_tweet_with_abnormal_tweet(self):
+  def test_parse_raw_tweet_abnormal(self):
     with open(self.file_dir + '/raw_tweet_abnormal.txt') as f:
       raw_tweet = json.load(f)
-      text, date_string = self.tweet_parser.parse_raw_tweet(raw_tweet)
+      text, date_string, has_unicode = self.tweet_parser.parse_raw_tweet(raw_tweet)
       self.assertEqual(text, None)
       self.assertEqual(date_string, None)
+      self.assertEqual(has_unicode, False)
 
   def test_get_datetime(self):
     date_string = "Sun Nov 01 23:34:40 +0000 2015"

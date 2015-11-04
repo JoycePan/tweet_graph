@@ -1,5 +1,6 @@
 import json
 import re
+import string
 from dateutil import parser
 
 class TweetParser:
@@ -7,15 +8,16 @@ class TweetParser:
   get a list of hashtag pair from a tweet context
   """
 
-  # Return tweet context and datetime string from raw tweet, 
+  # Return tweet context, datetime string from raw tweet and whether the string contains unicode
   # Return None if the input tweet has abnormal format
   def parse_raw_tweet(self, raw_tweet):
     try:  
-      text = re.sub(r'[^\x00-\x7F]+', '', raw_tweet['text'])
+      raw_text = raw_tweet['text']
+      text = re.sub(r'[^\x00-\x7F]+', '', raw_text)
       date_string = raw_tweet['created_at']
-      return text, date_string
+      return text, date_string, (len(raw_text) != len(text))
     except Exception as e:
-      return None, None   # skip abnormal tweet, like {"limit":{"track":12,"timestamp_ms":"1446253519737"}}
+      return None, None, False   # skip abnormal tweet, like {"limit":{"track":12,"timestamp_ms":"1446253519737"}}
 
   # Return datetime from datetime string
   def get_datetime(self, date_string):

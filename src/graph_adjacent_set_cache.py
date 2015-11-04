@@ -2,7 +2,8 @@ from graph_LRU_edge_cache import *
 
 class GraphAdjacentSetCache:
   """ Store the whole graph information with HashMap, which key is node (hashtag) in the graph, 
-  value is a set of neighbor (hashtags appear in the same tweet with the key).
+  value is a set of neighbor (hashtags appear in the same tweet with the key). 
+  I choose HashMap and HashSet because get() and set() of them are O(1) time complexity.
 
   This data structure aims to get the total nodes in the graph.
   """

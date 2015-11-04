@@ -23,6 +23,7 @@ class AvgDegreeGenerator:
     self.tweet_parser = TweetParser()
     self.edge_cache = GraphLRUEdgeCache()
     self.adj_graph_cache = GraphAdjacentSetCache()
+    self.unicode_tweet_num = 0
 
   # Parse tweet from pre_created tweet file. 
   # Write parsed tweets to ft1 after processing 3000 tweets.
@@ -56,6 +57,7 @@ class AvgDegreeGenerator:
             del parsed_tweet_list[:]
     raw_tweet_file.close()
     if len(parsed_tweet_list) > 0: ft1.write('\n'.join(parsed_tweet_list))
+    ft1.write('\n\n' + str(self.unicode_tweet_num) + ' tweets contained unicode.')
     ft1.close()
     ft2.close()
     return count
@@ -65,8 +67,9 @@ class AvgDegreeGenerator:
   # return parsed tweet and datetime, if there's no text in the tweet, return None, None
   def parse_one_tweet(self, line):
     tweet_json = json.loads(line)
-    text, time = self.tweet_parser.parse_raw_tweet(tweet_json)
+    text, time, has_unicode = self.tweet_parser.parse_raw_tweet(tweet_json)
     if None != text:
+      if has_unicode: self.unicode_tweet_num += 1
       hashtag_pair_list = self.tweet_parser.get_hashtag_pair_list(text)
       time_format = self.tweet_parser.get_datetime(time)
       remove_list = self.edge_cache.set_hashtag_pair_list(hashtag_pair_list, time_format)
