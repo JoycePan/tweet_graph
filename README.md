@@ -11,13 +11,13 @@ Implement two features:
 
 ## Development Summary
 
-I've implemented the required 2 features. In order to evaluate my tool and adapt different usage, my tool can parse realtime tweets and pre_created local tweets. 
+I've implemented the required 2 features. In order to evaluate my tool and adapt different usage, my tool can parse real time tweets and pre_created local tweets. 
 
 These are features of my tool:
 
 1. Clean and extract the text from the raw JSON tweets that come from the Twitter Streaming API, and track the number of tweets that contain unicode.
 2. Calculate the average degree of a vertex in a Twitter hashtag graph for the last 60 seconds, and update this each time a new tweet appears.
-3. Based on feature 1 and feature 2, I implement the tool in 2 ways: process pre_created local tweets and process realtime tweets. Process local tweets to get performance data about this tool. The experienment data is about 9 seconds to parse 18729 tweets. Process realtime tweets to meet higher requirement
+3. Based on feature 1 and feature 2, I implement the tool in 2 ways: process pre_created local tweets and process real time tweets. Process local tweets to get performance data of the tool. The experiment data is about 9 seconds to parse 18729 tweets. Process real time tweets to meet higher requirement
 
 ## Algorithm and Data Structure
 Implement the hashtag graph with LRU algorithm and graph adjacent set.

@@ -16,7 +16,7 @@ class AvgDegreeGenerator:
   """ Generate average degree, with realtime tweets.
   As tweets are realtime, I would open ft1 and ft2, write data and close them, 
   whenever I receive one tweet. It will write data to disk in a non-sequential manner. 
-  As the experienment data in average_degree_from_local_tweet.py is about 9 seconds parsing 18729 tweets,
+  As the experiment data in average_degree_from_local_tweet.py is about 9 seconds parsing 18729 tweets,
   the speed is fast enough. Then I could open and close ft1 and ft2 file frequently 
   to let users observe the realtime data.
   """

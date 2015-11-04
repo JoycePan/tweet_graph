@@ -12,7 +12,7 @@ class AvgDegreeGenerator:
   As tweets are pre created, I write parsed tweets into ft1 when I've parsed 3000 tweets. 
   In this case, I can write data sequentially. 
 
-  The experienment data is about 9 seconds to parse 18729 tweets.
+  The experiment data is about 9 seconds to parse 18729 tweets.
   """
 
   def __init__(self, raw_tweet_file_name, ft1_file_name, ft2_file_name):
