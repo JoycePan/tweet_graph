@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import re
 from datetime import datetime
 from dateutil import parser
 from tweet_parser import *
