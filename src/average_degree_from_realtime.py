@@ -45,7 +45,7 @@ class AvgDegreeGenerator:
         if 0 == len(self.adj_graph_cache.cache):
           ft2.write(str(0) + '\n')
         else:
-          ft2.write(str(round(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), 2)) + '\n')
+          ft2.write(format(2.0 * len(self.edge_cache.cache) / len(self.adj_graph_cache.cache), '.2') + '\n')
         ft2.close()
 
   def parse_one_tweet_and_generate_degree(self, line):
