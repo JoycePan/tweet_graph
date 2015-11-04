@@ -1,10 +1,10 @@
-Insight Data Engineering - Implement Coding Challenge
+Tweet Graph
 ===========================================================
-For this coding challenge, I will develop a tool that could help analyze the community of Twitter users.
+Develop a tool that could help analyze the community of Twitter users.
 
-## Challenge Requirement
+## Requirement
 
-This challenge is to implement two features:
+Implement two features:
 
 1. Clean and extract the text from the raw JSON tweets that come from the Twitter Streaming API, and track the number of tweets that contain unicode.
 2. Calculate the average degree of a vertex in a Twitter hashtag graph for the last 60 seconds, and update this each time a new tweet appears.
