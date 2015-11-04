@@ -32,6 +32,7 @@ Implement the hashtag graph with LRU algorithm and graph adjacent set.
 - run_realtime.sh : run script that process realtime tweets 
 
 To run run_realtime.sh, you need .twitter under ./data-gen/, and .twitter should contains twitter credential as following.
+
 	{
 	"access_token":"your access_token",
 	"access_token_secret":"your access_token_secret",
