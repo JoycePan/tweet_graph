@@ -44,10 +44,9 @@ The code files contain detailed explanation about every classes and functions.
 
 Prerequiste: 
 - To run any program, you need some general python libraries, like json, os, sys, datetime, dateutil, re, string.
-- To run run_realtime.sh, you need to install tweepy in your machine. (Try command line: pip install tweepy)
+- To run run_realtime.sh, you need to install tweepy in your machine, try command line: pip install tweepy.
 - You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following.
-
-
+   
 	{
 	"access_token":"your access_token",
 	"access_token_secret":"your access_token_secret",
