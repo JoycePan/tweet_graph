@@ -1,4 +1,4 @@
-Tweet Graph
+Tweet Graph Tool
 ===========================================================
 Develop a tool that helps analyze the community of Twitter users.
 
@@ -17,7 +17,9 @@ These are features of my tool:
 
 1. Clean and extract the text from the raw JSON tweets that come from the Twitter Streaming API, and track the number of tweets that contain unicode.
 2. Calculate the average degree of a vertex in a Twitter hashtag graph for the last 60 seconds, and update this each time a new tweet appears.
-3. Based on feature 1 and feature 2, I implement the tool in 2 ways: process pre_created local tweets and process real time tweets. Process local tweets to get performance data of the tool. The experiment data is about 9 seconds to parse 18729 tweets. Process real time tweets to meet higher requirement
+3. Based on feature 1 and feature 2, I implement the tool in 2 ways: process pre_created local tweets and process real time tweets. 
+   - Process local tweets to get performance data of the tool. The experiment data is about 8 seconds to parse 18729 tweets. 
+   - Process real time tweets to meet higher requirement
 
 ## Algorithm and Data Structure
 Implement the hashtag graph with LRU algorithm and graph adjacent set.
@@ -40,7 +42,9 @@ The code files contain detailed explanation about every classes and functions.
 - run_pre_create.sh : run script that process pre created tweets in ./tweet_input/pre_create_tweets.txt
 - run_realtime.sh : run script that process real time tweets 
 
-To run run_realtime.sh, you need ./data-gen/.twitter, and .twitter should contains twitter credential as following.
+To run any program, you need some general python libraries, like json, os, sys, datetime, dateutil, re, string. 
+To run run_realtime.sh, you need to install tweepy in your machine. (Try command line: pip install tweepy)
+You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following. 
 
 	{
 	"access_token":"your access_token",
