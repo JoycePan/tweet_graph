@@ -42,9 +42,10 @@ The code files contain detailed explanation about every classes and functions.
 - run_pre_create.sh : run script that process pre created tweets in ./tweet_input/pre_create_tweets.txt
 - run_realtime.sh : run script that process real time tweets 
 
-To run any program, you need some general python libraries, like json, os, sys, datetime, dateutil, re, string. 
-To run run_realtime.sh, you need to install tweepy in your machine. (Try command line: pip install tweepy)
-You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following. 
+Prerequiste: 
+- To run any program, you need some general python libraries, like json, os, sys, datetime, dateutil, re, string. 
+- To run run_realtime.sh, you need to install tweepy in your machine. (Try command line: pip install tweepy)
+- You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following. 
 
 	{
 	"access_token":"your access_token",
