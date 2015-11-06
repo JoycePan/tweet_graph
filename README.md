@@ -28,10 +28,10 @@ Implement the hashtag graph with LRU algorithm and graph adjacent set.
    - It's implemented with HashMap and Double LinkedList. 
    - The key of the HashMap is a hashtag_pair (e.g. ('#apache', '#hadoop')), while the value is a doubly LinkedList Node which contains the same hashtag_pair, the datetime of the tweet and the two linked list pointers, Next and Previous. 
    - The Double LinkedList is sorted in ascending order with datetime, which would be helpful to remove timeout hashtag_pair. 
-   - Whenever I update the graph, I will add new edges and remove timeout edges, which are outside the latest 60 seconds window. Such data structure is O(1) time complexity when put or remove an element. 
+   - Whenever I update the graph, I will add new edges and remove timeout edges, which are outside the latest 60 seconds window. Such data structure is **O(1) time complexity** when put or remove an element. 
 2. Graph Adjacent Set: Aims to get total nodes in the graph. 
    - Store the whole graph information with HashMap, which key is node (hashtag) in the graph, value is a set of neighbor (hashtags appear in the same tweet with the key). 
-   - I choose HashMap and HashSet because get() and set() of them are O(1) time complexity. 
+   - I choose HashMap and HashSet because get() and set() of them are **O(1) time complexity**. 
    - Whenever I update the graph, I will add new nodes and related neighbours and remove timeout nodes and related neighbours.
 
 The code files contain detailed explanation about every classes and functions.
