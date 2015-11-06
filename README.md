@@ -48,6 +48,7 @@ The code files contain detailed explanation about every classes and functions.
 2. To run run_realtime.sh, you need to install tweepy in your machine, try command line: pip install tweepy.
 3. You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following.
 
+
 	{
 	"access_token":"your access_token",
 	"access_token_secret":"your access_token_secret",
