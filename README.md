@@ -43,6 +43,7 @@ The code files contain detailed explanation about every classes and functions.
 - run_realtime.sh : run script that process real time tweets 
 
 Prerequiste: 
+
 1. To run any program, you need some general python libraries, like json, os, sys, datetime, dateutil, re, string.
 2. To run run_realtime.sh, you need to install tweepy in your machine, try command line: pip install tweepy.
 3. You also need ./data-gen/.twitter, and .twitter should contains twitter credential as following.
